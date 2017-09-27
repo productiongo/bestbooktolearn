@@ -1,0 +1,20 @@
+{{define "title"}}Best book to learn {{ .topic }}{{end}}
+
+{{define "body"}}
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-12">
+            <ul class="menu-links">
+              <li><a href="/" style="float: right">Home</a></li>
+              <li><a href="/about" style="float: right">About</a></li>
+            </ul>
+            <h2 class="subtitle">The best book to learn</h2>
+            <h1 class="title">{{ .topic }}</h1>
+            {{ .description }}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+{{end}}

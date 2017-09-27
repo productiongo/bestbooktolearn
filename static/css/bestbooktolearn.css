@@ -1,0 +1,108 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.2rem;
+}
+a {
+    text-decoration: underline;
+    text-decoration-skip: ink;
+}
+.section-header {
+    border-bottom: 1px solid #e0e0e0;
+}
+.section-header .title {
+    line-height: 1em;
+    margin-bottom: 1.5em;
+}
+.section-header .subtitle {
+    line-height: 1.5em;
+}
+.underline {
+    text-decoration: underline;
+    text-decoration-skip: ink;   
+}
+.book-cover {
+    -webkit-box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    margin-bottom: 40px;
+    min-height: 150px;
+    max-width: 90%;
+    min-width: 100px;
+}
+.menu-links {
+    list-style-type: none;
+    text-align: right;
+    padding: 0;
+    margin: 0;
+    font-size: 1.25rem;
+}
+.menu-links li {
+    margin: 20px;
+    display: inline-block;
+}
+
+/* Section: Books */
+.section-topics {
+    padding: 2rem;
+}
+.section-topics a {
+    font-size: 1.5rem;
+    margin-right: 2rem;
+}
+.section-topics .card  {
+    width: 100%;
+    margin: 1rem auto;
+    text-align: center;
+}
+.section-topics .card a {
+    color: hsl(0, 0%, 21%);
+    text-decoration: none;
+}
+.section-topics .card .cover {
+    padding: 40px;
+}
+.section-topics .card .cover img {
+    height: 240px;
+    -webkit-box-shadow: 0 0 20px 5px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 0 20px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 20px 5px rgba(0,0,0,0.3);
+}
+.section-topics .card .details {
+    padding: 1rem;
+    background: hsl(0, 0%, 96%);
+}
+.section-topics .card .details .title {
+    margin: 0;
+}
+.section-topics .card .details .buy {
+
+}
+.section-topics .card .details .why {
+}
+.section-topics .card .details .why ul {
+    list-style-type: none;
+    margin: 0;
+}
+.section-topics .card .details .why ul li {
+    margin: 0;
+}
+
+.section-books .column-image {
+    text-align: center;
+}
+.section-books .column-image .book-cover {
+    -webkit-box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 20px 5px rgba(0,0,0,0.3);
+    margin-bottom: 40px;
+}
+.section-books .column-image {
+    font-size: 1.1rem;
+}
+
+.section-books .book-title {
+    font-size: 2rem;
+}
+.section-books .authors {
+    font-size: 1rem;
+}

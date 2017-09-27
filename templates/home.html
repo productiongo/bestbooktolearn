@@ -1,0 +1,30 @@
+{{define "title"}}Best Book To Learn - Find the best book to learn your next skill{{end}}
+
+{{define "body"}}
+  <div class="container">
+    <section class="section section-header is-medium">
+      <ul class="menu-links">
+        <li><a href="/about" style="float: right">About</a></li>
+      </ul>
+      <div class="container">
+        <div class="columns">
+          <div class="column is-8">
+            <h1 class="title">Find the best book to learn your next skill.</h1>
+            <h2 class="subtitle">
+              Hi, I'm a software engineer who loves to learn through reading. I buy and read every book, so you can only learn from the best. New books added weekly.
+            </h2>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-topics">
+      <div class="columns">
+        <div class="column">
+          {{ range $topic := .topics }}
+             <a href="{{ $topic }}" title="Best book to learn {{ $topic }}">{{ $topic }}</a>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+  </div>
+{{end}}
