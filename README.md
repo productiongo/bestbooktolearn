@@ -10,3 +10,7 @@ $ go run main.go
 ```
 
 Now go to http://localhost:8080 to see the site.
+
+## About
+
+For an in-depth explanation of how this application was developed from conception to deployment, check out the book, [Production Go](https://leanpub.com/productiongo).
