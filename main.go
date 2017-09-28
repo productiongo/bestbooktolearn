@@ -9,8 +9,12 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
+
+	"github.com/productiongo/bestbooktolearn/amazon"
+	"github.com/productiongo/bestbooktolearn/books"
 )
 
 // Site implements the methods we need to run a BestBookToLearn
@@ -24,18 +28,20 @@ type Site struct {
 	staticDir   string
 
 	topics    []string
+	bookAPI   *books.API
 	templates map[string]*template.Template
 }
 
 // NewSite returns a new Site with a multiplexer for handling
 // requests. It also pregenerates routes for the given
 // topics.
-func NewSite(topics []string, templateDir, staticDir string) (*Site, error) {
+func NewSite(topics []string, bookAPI *books.API, templateDir, staticDir string) (*Site, error) {
 	s := &Site{
 		GracefulTimeout: 5 * time.Second,
 		templateDir:     templateDir,
 		staticDir:       staticDir,
 		topics:          topics,
+		bookAPI:         bookAPI,
 	}
 
 	// load in HTML templates
@@ -161,8 +167,16 @@ func (s Site) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // TopicHandler handles a request for a topic detail page
 func (s Site) TopicHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]string{
-		"topic": r.URL.EscapedPath(),
+	path := r.URL.EscapedPath()
+	topic := strings.Title(strings.Replace(strings.Trim(path, "/"), "-", " ", -1))
+	b, err := s.bookAPI.Search(topic, 1)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := map[string]interface{}{
+		"topic": topic,
+		"books": b,
 	}
 	s.render(w, "topic", data)
 }
@@ -176,6 +190,15 @@ func (s Site) AboutHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	addr := ":8080"
 
+	amz := amazon.AmazonProductAPI{}
+	amz.AccessKey = os.Getenv("AWS_ACCESS_KEY")
+	amz.SecretKey = os.Getenv("AWS_SECRET_KEY")
+	amz.Host = "webservices.amazon.com"
+	amz.AssociateTag = "bbtl-20"
+	amz.Client = &http.Client{} // optional
+
+	bookAPI := books.New(amz)
+
 	topics := []string{
 		"production-go",
 		"linux",
@@ -183,7 +206,7 @@ func main() {
 		"discrete-mathematics",
 		"competitive-programming",
 	}
-	site, err := NewSite(topics, "templates", "static")
+	site, err := NewSite(topics, bookAPI, "templates", "static")
 	if err != nil {
 		panic(err)
 	}
