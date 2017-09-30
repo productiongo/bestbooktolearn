@@ -190,9 +190,14 @@ func (s Site) AboutHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	addr := ":8080"
 
+	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
+	awsSecretKey := os.Getenv("AWS_SECRET_KEY")
+
+	log.Println("AWS Access key:", awsAccessKey)
+
 	amz := amazon.AmazonProductAPI{}
-	amz.AccessKey = os.Getenv("AWS_ACCESS_KEY")
-	amz.SecretKey = os.Getenv("AWS_SECRET_KEY")
+	amz.AccessKey = awsAccessKey
+	amz.SecretKey = awsSecretKey
 	amz.Host = "webservices.amazon.com"
 	amz.AssociateTag = "bbtl-20"
 	amz.Client = &http.Client{} // optional
