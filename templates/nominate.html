@@ -1,4 +1,4 @@
-{{define "title"}}Best book to learn {{ .topic }}{{end}}
+{{define "title"}}Nominate the best book to learn {{ .topic }}{{end}}
 
 {{define "body"}}
     <section class="section">
@@ -9,14 +9,9 @@
               <li><a href="/" style="float: right">Home</a></li>
               <li><a href="/about" style="float: right">About</a></li>
             </ul>
-            <a href="/nominate/{{ .slug }}">Nominate a book</a>
-            <h2 class="subtitle">The best book to learn</h2>
+            <a href="/{{ .slug }}">Back</a>
+            <h2 class="subtitle">Nominate the best book to learn</h2>
             <h1 class="title">{{ .topic }}</h1>
-            <ul class="books">
-            {{range $i, $book := .books}}
-              <li class="book"><img src="{{ $book.LargeImage.URL }}" class="cover">{{ $book.Title }}</li>
-            {{end}}
-            </ul>
           </div>
         </div>
       </div>

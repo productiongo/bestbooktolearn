@@ -32,6 +32,16 @@ type Site struct {
 	templates map[string]*template.Template
 }
 
+// PageTemplates is a slice containing the known HTML templates
+// used for rendering the site, excluding the .html extension.
+var PageTemplates = []string{
+	"home",
+	"about",
+	"topic",
+	"nominate",
+	"404",
+}
+
 // NewSite returns a new Site with a multiplexer for handling
 // requests. It also pregenerates routes for the given
 // topics.
@@ -74,14 +84,8 @@ func (s *Site) initHandlers(topics []string) {
 
 func (s *Site) initTemplates() error {
 	s.templates = map[string]*template.Template{}
-	templates := []string{
-		"home",
-		"about",
-		"topic",
-		"404",
-	}
 	baseTmpl := filepath.Join(s.templateDir, "base.html")
-	for _, tmpl := range templates {
+	for _, tmpl := range PageTemplates {
 		fp := filepath.Join(s.templateDir, tmpl+".html")
 		t, err := template.ParseFiles(fp, baseTmpl)
 		if err != nil {
@@ -100,6 +104,7 @@ func (s Site) initStatic() {
 // AddTopic adds a route to a specific topic
 func (s Site) AddTopic(t string) {
 	s.Handler.HandleFunc("/"+t+"/", s.TopicHandler)
+	s.Handler.HandleFunc("/nominate/"+t+"/", s.NominateHandler)
 }
 
 func (s Site) render(w io.Writer, name string, data interface{}) {
@@ -168,17 +173,38 @@ func (s Site) HomeHandler(w http.ResponseWriter, r *http.Request) {
 // TopicHandler handles a request for a topic detail page
 func (s Site) TopicHandler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.EscapedPath()
-	topic := strings.Title(strings.Replace(strings.Trim(path, "/"), "-", " ", -1))
+	slug := strings.Trim(path, "/")
+	topic := strings.Title(strings.Replace(slug, "-", " ", -1))
 	b, err := s.bookAPI.Search(topic, 1)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	data := map[string]interface{}{
+		"slug":  slug,
 		"topic": topic,
 		"books": b,
 	}
 	s.render(w, "topic", data)
+}
+
+// NominateHandler handles a request for the page where users can
+// nominate a book for a particular category.
+func (s Site) NominateHandler(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.EscapedPath()
+	slug := strings.Trim(path, "/")
+	topic := strings.Title(strings.Replace(slug, "-", " ", -1))
+	b, err := s.bookAPI.Search(topic, 1)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	data := map[string]interface{}{
+		"slug":  slug,
+		"topic": topic,
+		"books": b,
+	}
+	s.render(w, "nominate", data)
 }
 
 // AboutHandler handles a request to the about page.
@@ -192,8 +218,6 @@ func main() {
 
 	awsAccessKey := os.Getenv("AWS_ACCESS_KEY")
 	awsSecretKey := os.Getenv("AWS_SECRET_KEY")
-
-	log.Println("AWS Access key:", awsAccessKey)
 
 	amz := amazon.AmazonProductAPI{}
 	amz.AccessKey = awsAccessKey
